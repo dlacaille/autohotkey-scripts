@@ -1,14 +1,60 @@
-#Include "HotGestures/HotGestures.ahk"
+XStart := 0
+YStart := 0
 
-upSlide := HotGestures.Gesture("↑:0,-10|0,-10|0,-10|0,-10|0,-10|0,-10|0,-10|0,-10|0,-10|0,-10|0,-10|0,-10|0,-10|0,-10|0,-10|0,-10|0,-10|0,-10|0,-10|0,-10")
-downSlide := HotGestures.Gesture("↓:0,10|0,10|0,10|0,10|0,10|0,10|0,10|0,10|0,10|0,10|0,10|0,10|0,10|0,10|0,10|0,10|0,10|0,10|0,10|0,10")
-leftSlide := HotGestures.Gesture("←:-10,0|-10,0|-10,0|-10,0|-10,0|-10,0|-10,0|-10,0|-10,0|-10,0|-10,0|-10,0|-10,0|-10,0|-10,0|-10,0|-10,0|-10,0|-10,0|-10,0")
-rightSlide := HotGestures.Gesture("→:10,0|10,0|10,0|10,0|10,0|10,0|10,0|10,0|10,0|10,0|10,0|10,0|10,0|10,0|10,0|10,0|10,0|10,0|10,0|10,0")
+GestureAction(Action, Text)
+{
+  Send(Action)
+}
 
-hgs := HotGestures()
-hgs.Register(upSlide, "Play/Pause", _ => Send("{Media_Play_Pause}"))
-hgs.Register(leftSlide, "Previous", _ => Send("{Media_Prev}"))
-hgs.Register(rightSlide, "Next", _ => Send("{Media_Next}"))
-hgs.Register(downSlide, "Stop", _ => Send("{Media_Stop}"))
+OnGesture(Gesture)
+{
+  switch Gesture
+  {
+  case "left":
+    GestureAction("{Media_Next}", "Next")
+  case "right":
+    GestureAction("{Media_Prev}", "Previous")
+  case "up":
+    GestureAction("{Media_Play_Pause}", "Play/Pause")
+  case "down":
+    GestureAction("{Media_Stop}", "Stop")
+  }
+}
 
-hgs.Hotkey("MButton") ; set MButton as the trigger
+MButtonDown()
+{
+  global XStart
+  global YStart
+
+  ; Remember mouse position start
+  CoordMode "Mouse", "Screen"
+  MouseGetPos &XStart, &YStart
+}
+
+MButtonUp()
+{
+  global XStart
+  global YStart
+
+  ; Check where we ended up
+  CoordMode "Mouse", "Screen"
+  MouseGetPos &XPos, &YPos
+  XDelta := XPos - XStart
+  YDelta := YPos - YStart
+  
+  ; Detect the gesture
+  MinDelta := 20
+  XDeltaAbs := Abs(XDelta)
+  YDeltaAbs := Abs(YDelta)
+  IsHoriz := XDeltaAbs > MinDelta && XDeltaAbs > YDeltaAbs
+  IsVert := YDeltaAbs > MinDelta && XDeltaAbs < YDeltaAbs
+  if (IsHoriz)
+    OnGesture(XDelta < 0 ? "left" : "right")
+  else if (IsVert)
+    OnGesture(YDelta < 0 ? "up" : "down")
+  else ; Middle click
+    Send("{MButton}")
+}
+
+MButton::MButtonDown()
+MButton Up::MButtonUp()
