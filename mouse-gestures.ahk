@@ -43,7 +43,7 @@ MButtonUp()
   YDelta := YPos - YStart
   
   ; Detect the gesture
-  MinDelta := 20
+  MinDelta := 50
   XDeltaAbs := Abs(XDelta)
   YDeltaAbs := Abs(YDelta)
   IsHoriz := XDeltaAbs > MinDelta && XDeltaAbs > YDeltaAbs
