@@ -11,9 +11,9 @@ OnGesture(Gesture)
   switch Gesture
   {
   case "left":
-    GestureAction("{Media_Next}", "Next")
-  case "right":
     GestureAction("{Media_Prev}", "Previous")
+  case "right":
+    GestureAction("{Media_Next}", "Next")
   case "up":
     GestureAction("{Media_Play_Pause}", "Play/Pause")
   case "down":
