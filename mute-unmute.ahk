@@ -7,3 +7,10 @@ XButton1::^+m
 XButton2::!v
 XButton1::!a
 #HotIf
+
+#HotIf WinActive("ahk_exe slack.exe")
+XButton1:: {
+  Send("!{Left}")
+  Send("^!{Space}")
+}
+#HotIf
