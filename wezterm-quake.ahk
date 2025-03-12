@@ -7,10 +7,9 @@ LastActiveWin := ""
 Home := EnvGet("USERPROFILE")
 QuakeWinIni := Home "/.quakewin"
 
-; When pressing the key Win+`
-#`::
+; Tries to focus or create a new wezterm window
+OpenOrCreateWeztermQuakeWin()
 {
-
     ; Use the global variable
     global QuakeWinIni
     global LastActiveWin
@@ -41,6 +40,7 @@ QuakeWinIni := Home "/.quakewin"
         WinMoveBottom
         WinHide
 
+        ; Stop execution, we are done
         return
     }
 
@@ -66,4 +66,26 @@ QuakeWinIni := Home "/.quakewin"
 
     ; Make it take the top of the screen
     WinMove 0, 0, A_ScreenWidth, Max(Min(A_ScreenHeight/2, 1000), 600)
+}
+
+; Remap Win->Shift+Tab for Wezterm
+#HotIf  WinActive("ahk_exe wezterm-gui.exe")
+
+#1::Send "{Ctrl down}{Shift down}{1}{Ctrl up}{Shift up}"
+#2::Send "{Ctrl down}{Shift down}{2}{Ctrl up}{Shift up}"
+#3::Send "{Ctrl down}{Shift down}{3}{Ctrl up}{Shift up}"
+#4::Send "{Ctrl down}{Shift down}{4}{Ctrl up}{Shift up}"
+#5::Send "{Ctrl down}{Shift down}{5}{Ctrl up}{Shift up}"
+#6::Send "{Ctrl down}{Shift down}{6}{Ctrl up}{Shift up}"
+#7::Send "{Ctrl down}{Shift down}{7}{Ctrl up}{Shift up}"
+#8::Send "{Ctrl down}{Shift down}{8}{Ctrl up}{Shift up}"
+#9::Send "{Ctrl down}{Shift down}{9}{Ctrl up}{Shift up}"
+#t::Send "{Ctrl down}{Shift down}t{Ctrl up}{Shift up}"
+#w::Send "{Ctrl down}{Shift down}w{Ctrl up}{Shift up}"
+
+#HotIf
+
+; When pressing the key Win+`
+#`:: {
+    OpenOrCreateWeztermQuakeWin()
 }
